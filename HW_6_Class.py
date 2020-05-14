@@ -1,6 +1,6 @@
 class Animal:
     weight_list = []
-    weight_max = {'goose': 0, 'cow': 0, 'sheep': 0, 'chicken': 0, 'goat': 0, 'duck': 0, }
+    weight_max = {'goose': 0, 'cow': 0, 'sheep': 0, 'chicken': 0, 'goat': 0, 'duck': 0}
     def talk(self):
         return(print('The animal says', '"'+self.voice+'"'))
     def collect(self):
