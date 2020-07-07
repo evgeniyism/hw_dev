@@ -6,7 +6,7 @@ class Contact:
     :args - дополнительные телефоны
     :kwargs
         Email =
-        Social_media =
+        Social =
     '''
 
     def __init__(self, name, surname, phone, *args, favourite = False, **kwargs):
