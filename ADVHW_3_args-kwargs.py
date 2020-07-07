@@ -5,8 +5,8 @@ class Contact:
     '''
     :args - дополнительные телефоны
     :kwargs
-        Email =
-        Social =
+        email =
+        social =
     '''
 
     def __init__(self, name, surname, phone, *args, favourite = False, **kwargs):
