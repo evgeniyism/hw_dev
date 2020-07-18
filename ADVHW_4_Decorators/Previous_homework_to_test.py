@@ -34,7 +34,7 @@ class PhoneBook:
         self.name = name
         self.phonebook = []
         print(f'Создана телефонная книга "{self.name}"')
-    @decor.function_logger_new_folder
+    @decor.log_to_new_folder(path_to_log='new')
     def add_contact(self, contact):
         self.phonebook.append(contact)
         print('Контакт добавлен')
