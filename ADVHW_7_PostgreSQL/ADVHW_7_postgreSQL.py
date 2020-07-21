@@ -31,9 +31,9 @@ class Pgconnect:
             self.conn.commit()
         return True
 
-    def drop_table(self):
+    def drop_table(self, table_to_drop):
         cur = self.conn.cursor()
-        res = cur.execute('DROP TABLE student_course;')
+        res = cur.execute('DROP TABLE %s;', (table_to_drop))
         self.conn.commit()
         return res
 
@@ -83,6 +83,8 @@ class Pgconnect:
         res3 = cur.fetchall()
         for i in res3:
             print(i)
+        print('--- JOINS ---')
+        pprint(base.get_students(1))
 
     def student_course_relation(self):
         cur = self.conn.cursor()
@@ -103,10 +105,10 @@ class Pgconnect:
 
     def get_students(self, course_id):  # возвращает студентов определенного курса
         cur = self.conn.cursor()
-        # Здесь должно быть WHERE sc.course_id = %s, я не понимаю, как заставить его работать
-        request = '''SELECT s.name, c.name FROM student_course as sc JOIN students as s ON sc.student_id = s.id JOIN courses as c ON sc.course_id = c.id
+
+        request = '''SELECT s.name, c.name FROM student_course as sc JOIN students as s ON sc.student_id = s.id JOIN courses as c ON sc.course_id = c.id WHERE sc.course_id = %s
         ;'''
-        cur.execute(request, ([course_id]))
+        cur.execute(request, (course_id,))
         res = cur.fetchall()
         return res
 
@@ -133,8 +135,7 @@ class Pgconnect:
 if __name__ == '__main__':
     base = Pgconnect(database_name='bogdanov', user='bogdanov', password='bogdanov', host='pg.codecontrol.ru', port=59432)
     base.check()
-    print('--- JOINS ---')
-    pprint(base.get_students(1))
+
 
 
 # ПРИМЕРЫ ИСПОЛЬЗОВАНИЯ
