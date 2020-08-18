@@ -3,6 +3,7 @@ from Advanced.Finals_Advanced.mongo_handler import Mongo
 from pprint import pprint
 import json
 from Advanced.Finals_Advanced.constants import *
+from copy import deepcopy
 
 
 
@@ -31,7 +32,12 @@ class VKinder_search:
         :return:
         '''
         clear_matches_to_base = self.instance.show_10(self.full_list, page=self.page)
-        to_base = self.show_result_and_write_to_base(clear_matches_to_base)
+        while self.check_matches_in_base(clear_matches_to_base) == True:
+            self.page +=10
+            clear_matches_to_base = self.instance.show_10(self.full_list, page=self.page)
+        pprint(clear_matches_to_base)
+        copy_to_base = deepcopy(clear_matches_to_base)
+        self.show_result_and_write_to_base(copy_to_base)
         return clear_matches_to_base
 
     def search_next_page(self):
@@ -44,8 +50,12 @@ class VKinder_search:
         else:
             print('Вы достигли конца списка')
         clear_matches_to_base = self.instance.show_10(self.full_list, page=self.page)
-        to_base = self.show_result_and_write_to_base(clear_matches_to_base)
+        copy_to_base = deepcopy(clear_matches_to_base)
+        self.show_result_and_write_to_base(copy_to_base)
         return clear_matches_to_base
+
+    # def send_list_to_base(self, list_to_base):
+    #     self.show_result_and_write_to_base(copy_to_base)
 
     def show_result_and_write_to_base(self, result):
         '''
@@ -57,7 +67,7 @@ class VKinder_search:
         print('Результат поиска')
         pprint(result)
         written = self.base.add_to_base(result, self.collection)
-        return written
+        return None
 
     def save_result_to_file(self, info_to_save):
         '''
@@ -65,12 +75,20 @@ class VKinder_search:
         :param info_to_save: list of dicts
         :return:
         '''
-        filename = f'Search_{self.user}_page_{self.page}.json'
-        info_to_save = str(info_to_save)
+        filename = f'Search_{self.user}_page_{self.page//10}.json'
         with open(filename, 'w', encoding='utf-8') as file:
             json.dump(info_to_save, file)
         print(f'Файл {filename} успешно сохранен')
         return True
+
+    def check_matches_in_base(self, search_list_of_dicts):
+        to_check = search_list_of_dicts
+        in_base = self.base.find_by_id_in_base(str(self.user))
+        a = list(to_check[0].keys())
+        if a[0] in in_base:
+            return True
+        else:
+            return False
 
     def start(self):
         '''
@@ -78,22 +96,18 @@ class VKinder_search:
         :return:
         '''
         print('Идет поиск')
-        quit = False
+        quit_program = False
         result = self.search_first_page()
-        user_input = input(MENU_TEXT_MAIN)
-        while not quit:
+        while not quit_program:
+            user_input = input(MENU_TEXT_MAIN)
             if user_input in ACCEPTABLE_ANSWERS:
                 if user_input == '1':
                     self.save_result_to_file(result)
-                    user_input = input(MENU_TEXT_MAIN)
                 if user_input == '2':
                     result = self.search_next_page()
-                    user_input = input(MENU_TEXT_MAIN)
                 if user_input == 'quit':
-                    quit = True
+                    break
             else:
-                print('Я в повторе')
-                user_input = input(MENU_TEXT_MAIN)
+                print('НЕВЕРНЫЙ ВВОД')
         print('Программа завершена')
-
 

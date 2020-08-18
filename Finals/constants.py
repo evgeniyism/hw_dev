@@ -1,6 +1,7 @@
 from time import sleep
+from functools import partial
 
-SLEEP = sleep(0.34)
+SLEEP = partial(sleep, 0.34)
 MENU_TEXT_MAIN = '''***********************
 Введите: 
 1 - чтобы сохранить результат поиска в файл

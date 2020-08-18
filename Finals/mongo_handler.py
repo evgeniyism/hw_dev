@@ -1,10 +1,14 @@
+from functools import reduce
+
 from pymongo import MongoClient
 import csv
 from datetime import datetime
+import re
+
 
 class Mongo:
 
-    def __init__(self,basename, **kwargs):
+    def __init__(self, basename, **kwargs):
         self.basename = basename
         self.client = MongoClient(**kwargs)
         self.active_db = self.client[basename]
@@ -28,17 +32,15 @@ class Mongo:
 
     def add_to_base(self, list_of_dicts, collection_to_add):
         result = collection_to_add.insert_many(list_of_dicts)
-        # print(result.inserted_ids)
         return True
 
-    def show_collection(self, collection):
-        result = (self.active_db[collection].find())
-        for i in result:
-            print(i)
-        return result
-
-    # def find_by_name(self, user_id, collection):
-    #     search = f'{id}'
-    #     pattern = re.compile(search)
-    #     result = self.active_db[collection].find({'Исполнитель':pattern}).sort('Цена', pymongo.ASCENDING)
-    #     return result
+    def find_by_id_in_base(self, collection):
+        cursor = self.active_db[collection].find({})
+        vkids = set()
+        for i in cursor:
+            vkids.update(i.keys())
+        try:
+            vkids.remove('_id')
+        except:
+            pass
+        return vkids
