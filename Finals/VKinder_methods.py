@@ -10,10 +10,8 @@ class VKinder:
 
     def __init__(self):
         # login = input('Введите номер телефона:')
-        login = '+79646467181'
         self.login = login
         # password = input('Введите пароль:')
-        password = 'Gamzwege32176'
         self.session = vk_api.VkApi(login, password, auth_handler=self.auth_handler)
         self.session.auth()
         self.token = self.session.token['access_token']
