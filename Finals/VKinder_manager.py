@@ -6,7 +6,6 @@ from Advanced.Finals_Advanced.constants import *
 from copy import deepcopy
 
 
-
 class VKinder_search:
 
     def __init__(self):
@@ -33,9 +32,9 @@ class VKinder_search:
         '''
         clear_matches_to_base = self.instance.show_10(self.full_list, page=self.page)
         while self.check_matches_in_base(clear_matches_to_base) == True:
-            self.page +=10
+            self.page += 10
             clear_matches_to_base = self.instance.show_10(self.full_list, page=self.page)
-        pprint(clear_matches_to_base)
+        print(clear_matches_to_base)
         copy_to_base = deepcopy(clear_matches_to_base)
         self.show_result_and_write_to_base(copy_to_base)
         return clear_matches_to_base
@@ -66,7 +65,8 @@ class VKinder_search:
         print(SEPARATOR)
         print('Результат поиска')
         pprint(result)
-        written = self.base.add_to_base(result, self.collection)
+        if not self.check_matches_in_base(result):
+            self.base.add_to_base(result, self.collection)
         return None
 
     def save_result_to_file(self, info_to_save):
@@ -75,7 +75,7 @@ class VKinder_search:
         :param info_to_save: list of dicts
         :return:
         '''
-        filename = f'Search_{self.user}_page_{self.page//10}.json'
+        filename = f'Search_{self.user}_page_{self.page // 10}.json'
         with open(filename, 'w', encoding='utf-8') as file:
             json.dump(info_to_save, file)
         print(f'Файл {filename} успешно сохранен')
@@ -110,4 +110,3 @@ class VKinder_search:
             else:
                 print('НЕВЕРНЫЙ ВВОД')
         print('Программа завершена')
-

@@ -4,6 +4,7 @@ from datetime import datetime
 from Advanced.Finals_Advanced.constants import SLEEP
 import json
 import os.path
+from pprint import pprint
 
 
 class VKinder:
@@ -145,7 +146,7 @@ class VKinder:
         res = search_result['response']['items']
         for i in res:
             link = i['domain']
-            to_add = {'vkid':str(i['id']), str(i['id']): {'name': i['first_name'] + ' ' + i['last_name'], 'link': 'http://vk.com/' + link}}
+            to_add = {str(i['id']): {'name': i['first_name'] + ' ' + i['last_name'], 'link': 'http://vk.com/' + link, 'vkid':str(i['id'])}}
             final_dict.update(to_add)
         with open('search_result.json', 'w', encoding='utf-8') as file:
             json.dump(final_dict, file)
@@ -183,16 +184,18 @@ class VKinder:
         '''
         matches = [k for k in search_results.keys()][page:page + 10]
         for match in matches:
-            try:
-                links = self.top_3_photos(match)
-                if len(links) == 0:
-                    links = 'Фото недоступно, добавьте пользователя в друзья'
-            except:
-                links = 'Профиль закрыт, добавьте пользователя в друзья'
-            search_results[match].update({'photos': links})
-            search_results[match].update({'page': page // 10})
-            search_results[match].update({'vkid': match})
+            type(type(search_results[match]))
+            if type(search_results[match]) == dict:
+                try:
+                    links = self.top_3_photos(match)
+                    if len(links) == 0:
+                        links = 'Фото недоступно, добавьте пользователя в друзья'
+                except:
+                    links = 'Профиль закрыт, добавьте пользователя в друзья'
+                search_results[match].update({'photos': links})
+                search_results[match].update({'page': page // 10})
+            else:
+                del search_results[match]
         base_slice_raw = {key: value for key, value in search_results.items() if key in matches}
         base_slice = [{key: value} for key, value in base_slice_raw.items()]
         return base_slice
-
