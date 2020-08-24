@@ -84,11 +84,14 @@ class VKinder_search:
     def check_matches_in_base(self, search_list_of_dicts):
         to_check = search_list_of_dicts
         in_base = self.base.find_by_id_in_base(str(self.user))
-        a = list(to_check[0].keys())
-        if a[0] in in_base:
-            return True
-        else:
+        to_check_set = set()
+        for i in to_check:
+            to_check_set.update(i.keys())
+        id_check = to_check_set - in_base
+        if len(id_check) > 0:
             return False
+        else:
+            return True
 
     def start(self):
         '''

@@ -69,7 +69,7 @@ class VKinder:
         if response.status_code == 200:
             return response
         else:
-            raise Exception
+            raise Exception(f'Произошла ошибка во время запроса к VK API. Код ответа {response.status_code}: {response.text} ')
 
     def get_city(self):
         search_request = input('Ваш город не указан в профиле, введите город: ')
@@ -88,10 +88,7 @@ class VKinder:
         name = data.json()['response'][0]['first_name'] + ' ' + data.json()['response'][0]['last_name']
         age = data.json()['response'][0]['bdate']
         age = datetime.strptime(age, '%d.%m.%Y')
-        age = (datetime.now() - age) // 365
-        age = int(str(age)[0:3].strip())  # Здесь объект timedelta, который возвращает дни и часы. Можно преобразовывать
-        # через доп функцию, но по-моему проще взять дни, поделить на 365 и привести к int. В итоге все равно получим
-        # int значение для дальнейшей работы
+        age = (datetime.now() - age).days // 365
 
         try:
             city = data.json()['response'][0]['city']['title']

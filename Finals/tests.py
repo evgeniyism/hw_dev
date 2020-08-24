@@ -1,4 +1,3 @@
-from Advanced.Finals_Advanced.VKinder_methods import VKinder
 from Advanced.Finals_Advanced.VKinder_manager import VKinder_search
 from pymongo import MongoClient
 import unittest
@@ -22,12 +21,12 @@ class VKinder_search_Test(unittest.TestCase):
         search = self.app.search_first_page()
         print(type(search))
         self.assertTrue(len(search) == 10, 'API error')
-        self.assertTrue(type(search) == list, 'Type error: list expected')
+        self.assertTrue(isinstance(search, list), 'Type error: list expected')
 
     def test_search_next_page(self):
         search = self.app.search_next_page()
         self.assertTrue(len(search) == 10, 'API error')
-        self.assertTrue(type(search) == list, 'Type error: list expected')
+        self.assertTrue(isinstance(search, list), 'Type error: list expected')
         self.assertTrue(self.app.page % 10 == 0, 'Page error')
 
 
